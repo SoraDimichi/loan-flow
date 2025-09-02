@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { useFormContext } from "~/forms/context/FormContext";
 import { fetchWorkplaceCategories } from "~/forms/utils/api";
-import type { Route } from "../+types/home";
+import type { Route } from "./+types/home";
 
 const addressFormSchema = z.object({
   workplace: z.string().min(1, "Workplace is required"),
@@ -38,12 +39,8 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-interface AddressFormProps {
-  onBack: () => void;
-  onNext: () => void;
-}
-
-export default function AddressForm({ onBack, onNext }: AddressFormProps) {
+export default function AddressForm() {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useFormContext();
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,15 +69,26 @@ export default function AddressForm({ onBack, onNext }: AddressFormProps) {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.phone ||
+      !formData.gender
+    ) {
+      navigate("/");
+    }
+  }, [formData, navigate]);
+
   function onSubmit(values: z.infer<typeof addressFormSchema>) {
     updateFormData(values);
-    onNext();
+    navigate("/loan");
   }
 
   function handleBack() {
     const values = form.getValues();
     updateFormData(values);
-    onBack();
+    navigate("/");
   }
 
   return (
@@ -91,7 +99,6 @@ export default function AddressForm({ onBack, onNext }: AddressFormProps) {
       >
         <h1 className="text-2xl font-bold mb-6">Address and Workplace</h1>
 
-        {/* Workplace field */}
         <FormField
           control={form.control}
           name="workplace"
@@ -123,7 +130,6 @@ export default function AddressForm({ onBack, onNext }: AddressFormProps) {
           )}
         />
 
-        {/* Address field */}
         <FormField
           control={form.control}
           name="address"
@@ -142,7 +148,6 @@ export default function AddressForm({ onBack, onNext }: AddressFormProps) {
           )}
         />
 
-        {/* Navigation buttons */}
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={handleBack}>
             Back

@@ -2,8 +2,9 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { RouterProvider, createHashRouter } from "react-router";
 import Root from "./root";
-import Home from "./routes/home";
-import { clientLoader as homeLoader } from "./routes/home";
+import PersonalDataForm from "./pages/home";
+import AddressForm from "./pages/address";
+import LoanForm from "./pages/loan";
 
 const router = createHashRouter([
   {
@@ -11,23 +12,24 @@ const router = createHashRouter([
     element: <Root />,
     children: [
       {
+        path: "/",
         index: true,
-        element: <Home />,
-        loader: homeLoader,
+        element: <PersonalDataForm />,
+      },
+      {
+        path: "address/",
+        element: <AddressForm />,
+      },
+      {
+        path: "loan/",
+        element: <LoanForm />,
       },
     ],
   },
 ]);
 
 function hydrate() {
-  let rootElement = document.getElementById("root");
-
-  if (!rootElement) {
-    rootElement =
-      document.getElementById("app") ||
-      document.querySelector("main") ||
-      document.body;
-  }
+  let rootElement = document.getElementById("root") || document.body;
 
   const root = createRoot(rootElement);
   root.render(

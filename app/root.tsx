@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import LoadingScreen from "./components/loading-screen";
+import { FormProvider } from "~/forms/context/FormContext";
 
 export async function loader() {
   return {
@@ -53,7 +54,11 @@ export function HydrateFallback({ loaderData }: Route.ComponentProps) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <FormProvider>
+      <Outlet />
+    </FormProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

@@ -20,8 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router";
 import { useFormContext } from "~/forms/context/FormContext";
-import type { Route } from "../+types/home";
+import type { Route } from "./+types/home";
 
 const personalDataSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
@@ -40,11 +41,8 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-interface PersonalDataFormProps {
-  onNext: () => void;
-}
-
-export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
+export default function PersonalDataForm() {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useFormContext();
 
   const form = useForm<z.infer<typeof personalDataSchema>>({
@@ -60,7 +58,7 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
   function onSubmit(values: z.infer<typeof personalDataSchema>) {
     updateFormData(values);
 
-    onNext();
+    navigate("/address");
   }
 
   return (
@@ -71,7 +69,6 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
       >
         <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
 
-        {/* Phone field */}
         <FormField
           control={form.control}
           name="phone"
@@ -79,7 +76,11 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
             <FormItem className="flex flex-col items-start">
               <FormLabel>Phone number</FormLabel>
               <FormControl className="w-full">
-                <PhoneInput placeholder="" {...field} defaultCountry="TR" />
+                <PhoneInput
+                  placeholder="+996 505 258 645"
+                  {...field}
+                  defaultCountry="KG"
+                />
               </FormControl>
               <FormDescription>Enter your phone number.</FormDescription>
               <FormMessage />
@@ -87,7 +88,6 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
           )}
         />
 
-        {/* First name field */}
         <FormField
           control={form.control}
           name="firstName"
@@ -102,7 +102,6 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
           )}
         />
 
-        {/* Last name field */}
         <FormField
           control={form.control}
           name="lastName"
@@ -117,7 +116,6 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
           )}
         />
 
-        {/* Gender field */}
         <FormField
           control={form.control}
           name="gender"
@@ -139,8 +137,9 @@ export default function PersonalDataForm({ onNext }: PersonalDataFormProps) {
             </FormItem>
           )}
         />
-
-        <Button type="submit">Next</Button>
+        <div className="flex justify-end">
+          <Button type="submit">Next</Button>
+        </div>
       </form>
     </Form>
   );

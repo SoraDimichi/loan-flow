@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,7 +16,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useFormContext } from "~/forms/context/FormContext";
 import { submitLoanApplication } from "~/forms/utils/api";
-import type { Route } from "../+types/home";
+import type { Route } from "./+types/home";
 import {
   Dialog,
   DialogContent,
@@ -36,16 +37,25 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-interface LoanFormProps {
-  onBack: () => void;
-  onComplete: () => void;
-}
-
-export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
+export default function LoanForm() {
+  const navigate = useNavigate();
   const { formData, updateFormData, resetForm } = useFormContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [apiResponse, setApiResponse] = useState<any>(null);
+
+  useEffect(() => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.phone ||
+      !formData.gender ||
+      !formData.workplace ||
+      !formData.address
+    ) {
+      navigate("/address");
+    }
+  }, [formData, navigate]);
 
   const form = useForm<z.infer<typeof loanFormSchema>>({
     resolver: zodResolver(loanFormSchema),
@@ -81,7 +91,7 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
     const values = form.getValues();
     updateFormData(values);
 
-    onBack();
+    navigate("/address");
   }
 
   function handleCloseModal() {
@@ -91,7 +101,7 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
   function handleStartNew() {
     resetForm();
     setShowModal(false);
-    onComplete();
+    navigate("/");
   }
 
   return (
@@ -103,7 +113,6 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
         >
           <h1 className="text-2xl font-bold mb-6">Loan Parameters</h1>
 
-          {/* Loan amount slider */}
           <FormField
             control={form.control}
             name="amount"
@@ -129,7 +138,6 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
             )}
           />
 
-          {/* Loan term slider */}
           <FormField
             control={form.control}
             name="term"
@@ -153,7 +161,6 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
             )}
           />
 
-          {/* Navigation buttons */}
           <div className="flex justify-between">
             <Button type="button" variant="outline" onClick={handleBack}>
               Back
@@ -164,8 +171,6 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
           </div>
         </form>
       </Form>
-
-      {/* Success Modal */}
       <Dialog open={showModal} onOpenChange={handleCloseModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -179,7 +184,7 @@ export default function LoanForm({ onBack, onComplete }: LoanFormProps) {
               <code>{JSON.stringify(apiResponse, null, 2)}</code>
             </pre>
           </div>
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end">
             <Button onClick={handleStartNew}>Start New Application</Button>
           </div>
         </DialogContent>
