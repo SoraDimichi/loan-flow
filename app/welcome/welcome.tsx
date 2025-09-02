@@ -1,7 +1,13 @@
+import { useLoaderData } from "react-router";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 
 export function Welcome() {
+  const { message, timestamp } = useLoaderData() as {
+    message?: string;
+    timestamp?: string;
+  };
+
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
@@ -20,6 +26,20 @@ export function Welcome() {
           </div>
         </header>
         <div className="max-w-[300px] w-full space-y-6 px-4">
+          {/* Display client loader data */}
+          {message && (
+            <div className="rounded-3xl border border-blue-200 p-6 dark:border-blue-700 space-y-4 mb-4">
+              <p className="leading-6 text-blue-700 dark:text-blue-300 text-center font-bold">
+                {message}
+              </p>
+              {timestamp && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                  Loaded at: {new Date(timestamp).toLocaleTimeString()}
+                </p>
+              )}
+            </div>
+          )}
+
           <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
             <p className="leading-6 text-gray-700 dark:text-gray-200 text-center">
               What&apos;s next?

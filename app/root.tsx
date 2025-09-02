@@ -9,6 +9,13 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import LoadingScreen from "./components/loading-screen";
+
+export async function loader() {
+  return {
+    version: "1.0.0",
+  };
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -39,6 +46,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   );
+}
+
+export function HydrateFallback({ loaderData }: Route.ComponentProps) {
+  return <LoadingScreen loaderData={loaderData} />;
 }
 
 export default function App() {
