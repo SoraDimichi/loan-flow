@@ -10,7 +10,6 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import LoadingScreen from "./components/loading-screen";
-import { FormProvider } from "~/forms/context/FormContext";
 
 export async function loader() {
   return {
@@ -33,15 +32,15 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+        <main className="w-[320px] h-[560px]">{children}</main>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -54,11 +53,7 @@ export function HydrateFallback({ loaderData }: Route.ComponentProps) {
 }
 
 export default function App() {
-  return (
-    <FormProvider>
-      <Outlet />
-    </FormProvider>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

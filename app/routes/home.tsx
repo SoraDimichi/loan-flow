@@ -65,7 +65,7 @@ export default function PersonalDataForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-3xl mx-auto py-10"
+          className="w-[320px] h-[560px] flex flex-col rounded-md  space-y-2 max-w-3xl mx-auto p-4 border-1 border-white"
       >
         <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
 
@@ -82,7 +82,6 @@ export default function PersonalDataForm() {
                   defaultCountry="KG"
                 />
               </FormControl>
-              <FormDescription>Enter your phone number.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -137,7 +136,7 @@ export default function PersonalDataForm() {
             </FormItem>
           )}
         />
-        <div className="flex justify-end">
+        <div className="mt-auto flex justify-end">
           <Button type="submit">Next</Button>
         </div>
       </form>

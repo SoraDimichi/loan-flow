@@ -1,46 +1,14 @@
-import { createRoot } from "react-dom/client";
-import { StrictMode } from "react";
-import { RouterProvider, createHashRouter } from "react-router";
-import Root from "./root";
-import PersonalDataForm from "./pages/home";
-import AddressForm from "./pages/address";
-import LoanForm from "./pages/loan";
+import { HydratedRouter } from "react-router/dom";
+import { startTransition } from "react";
+import { hydrateRoot } from "react-dom/client";
 
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <Root />,
-    children: [
-      {
-        path: "/",
-        index: true,
-        element: <PersonalDataForm />,
-      },
-      {
-        path: "address/",
-        element: <AddressForm />,
-      },
-      {
-        path: "loan/",
-        element: <LoanForm />,
-      },
-    ],
-  },
-]);
+import { FormProvider } from "~/forms/context/FormContext";
 
-function hydrate() {
-  let rootElement = document.getElementById("root") || document.body;
-
-  const root = createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>,
+startTransition(() => {
+  hydrateRoot(
+    document,
+    <FormProvider>
+      <HydratedRouter />
+    </FormProvider>,
   );
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", hydrate);
-} else {
-  hydrate();
-}
+});

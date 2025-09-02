@@ -95,7 +95,7 @@ export default function AddressForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-3xl mx-auto py-10"
+        className="w-[320px] h-[560px] flex flex-col rounded-md  space-y-2 max-w-3xl mx-auto p-4 border-1 border-white"
       >
         <h1 className="text-2xl font-bold mb-6">Address and Workplace</h1>
 
@@ -147,8 +147,7 @@ export default function AddressForm() {
             </FormItem>
           )}
         />
-
-        <div className="flex justify-between">
+        <div className="mt-auto flex justify-between">
           <Button type="button" variant="outline" onClick={handleBack}>
             Back
           </Button>
