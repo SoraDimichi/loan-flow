@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
+import MyForm from "~/forms";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -27,5 +28,5 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <MyForm />;
 }
