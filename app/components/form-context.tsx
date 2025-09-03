@@ -1,19 +1,15 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
-import { z } from "zod";
+import type z from "zod";
+import type {
+  personalDataSchema,
+  addressFormSchema,
+  loanFormSchema,
+} from "~/lib/schemas";
 
-const formSchema = z.object({
-  phone: z.string(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  gender: z.string(),
-  workplace: z.string(),
-  address: z.string().min(1),
-  amount: z.number().min(200).max(1000),
-  term: z.number().min(10).max(30),
-});
-
-export type FormData = z.infer<typeof formSchema>;
+export type FormData = z.infer<
+  typeof personalDataSchema & typeof addressFormSchema & typeof loanFormSchema
+>;
 
 const initialFormData: FormData = {
   phone: "",
@@ -40,19 +36,14 @@ export function FormProvider({ children }: { children: ReactNode }) {
     return savedData ? JSON.parse(savedData) : initialFormData;
   });
 
-  useEffect(() => {
-    localStorage.setItem("loanFormData", JSON.stringify(formData));
-  }, [formData]);
-
   const updateFormData = (data: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
+    localStorage.setItem("loanFormData", JSON.stringify(formData));
   };
 
   const resetForm = () => {
     setFormData(initialFormData);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("loanFormData");
-    }
+    localStorage.removeItem("loanFormData");
   };
 
   return (

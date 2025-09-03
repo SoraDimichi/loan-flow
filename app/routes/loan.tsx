@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { loanFormSchema } from "@/lib/schemas";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
-import { useFormContext } from "~/components/form-context";
-import { submitLoanApplication } from "~/lib/api";
+import { useFormContext } from "@/components/form-context";
+import { submitLoanApplication } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -23,11 +24,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const loanFormSchema = z.object({
-  amount: z.number().min(200).max(1000),
-  term: z.number().min(10).max(30),
-});
 
 export default function LoanForm() {
   const navigate = useNavigate();
@@ -161,12 +157,12 @@ export default function LoanForm() {
           <DialogHeader>
             <DialogTitle>Application Submitted Successfully!</DialogTitle>
             <DialogDescription>
-              Congratulations, {formData.lastName} {formData.firstName}. You
-              have been approved for {formData.amount}$ for a period of
-              {formData.term} days.
+              {`Congratulations, ${formData.lastName} ${formData.firstName}. You
+              have been approved for ${formData.amount}$ for a period of 
+              ${formData.term} days.`}
             </DialogDescription>
           </DialogHeader>
-          <div className=" flex justify-end">
+          <div className="mt-4 flex justify-center">
             <Button onClick={handleStartNew}>Start New Application</Button>
           </div>
         </DialogContent>

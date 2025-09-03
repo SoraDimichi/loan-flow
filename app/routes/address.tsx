@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { addressFormSchema } from "@/lib/schemas";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,13 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useFormContext } from "~/components/form-context";
+import { useFormContext } from "@/components/form-context";
 import WorkplaceCategoriesSelect from "~/components/workplace-select-content";
 
-const addressFormSchema = z.object({
-  workplace: z.string().min(1, "Workplace is required"),
-  address: z.string().min(1, "Residential address is required"),
-});
 
 export default function AddressForm() {
   const navigate = useNavigate();

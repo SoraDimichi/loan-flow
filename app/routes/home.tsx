@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { personalDataSchema } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,12 +23,6 @@ import {
 import { useNavigate } from "react-router";
 import { useFormContext } from "~/components/form-context";
 
-const personalDataSchema = z.object({
-  phone: z.string().min(1, "Phone number is required"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  gender: z.string().min(1, "Gender is required"),
-});
 
 export default function PersonalDataForm() {
   const navigate = useNavigate();
