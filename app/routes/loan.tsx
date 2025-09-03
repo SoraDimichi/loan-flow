@@ -17,19 +17,11 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useFormContext } from "@/components/form-context";
 import { submitLoanApplication } from "@/lib/api";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { SuccessDialog } from "@/components/success-dialog";
 
 export default function LoanForm() {
   const navigate = useNavigate();
   const { formData, updateFormData, resetForm } = useFormContext();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const form = useForm<z.infer<typeof loanFormSchema>>({
@@ -53,8 +45,6 @@ export default function LoanForm() {
     } catch (error) {
       form.setError("root.serverError", { message: "something went wrong" });
       console.error("Error submitting application:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -146,27 +136,15 @@ export default function LoanForm() {
                 type="submit"
                 disabled={form.formState.isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit Application"}
+                {form.formState.isSubmitting
+                  ? "Submitting..."
+                  : "Submit Application"}
               </Button>
             </div>
           </div>
         </form>
       </Form>
-      <Dialog open={showModal} onOpenChange={handleStartNew}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Application Submitted Successfully!</DialogTitle>
-            <DialogDescription>
-              {`Congratulations, ${formData.lastName} ${formData.firstName}. You
-              have been approved for ${formData.amount}$ for a period of 
-              ${formData.term} days.`}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4 flex justify-center">
-            <Button onClick={handleStartNew}>Start New Application</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SuccessDialog open={showModal} onClose={handleStartNew} />
     </>
   );
 }

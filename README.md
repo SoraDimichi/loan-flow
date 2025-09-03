@@ -1,87 +1,63 @@
-# Welcome to React Router!
+# Loan Flow Application Documentation
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Loan Flow is a multi-step loan application form built with React.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Live Demo
 
-## Features
+You can view the live application at: [https://soradimichi.github.io/loan-flow](https://soradimichi.github.io/loan-flow)
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Application Structure
 
-## Getting Started
+The application consists of three main steps:
 
-### Installation
+1. **Personal Information** - Collects basic user details:
+   - Phone number
+   - First name
+   - Last name
+   - Gender
 
-Install the dependencies:
+2. **Address and Workplace** - Collects:
+   - Workplace information
+   - Residential address
+
+3. **Loan Parameters** - Allows users to:
+   - Select loan amount (200-1000$)
+   - Choose loan term (10-30 days)
+
+## Technical Details
+
+- **Frontend Framework**: React with TypeScript
+- **Routing**: React Router v7
+- **Form Handling**: React Hook Form with Zod validation
+- **Component library**: Shardcn
+- **Deployment**: GitHub Pages
+
+## Form Validation
+
+Each step includes validation rules:
+
+- Personal information validates phone numbers, names, and requires gender selection
+- Address information requires workplace selection and address entry
+- Loan parameters have min/max constraints for amount and term
+
+## Navigation Flow
+
+The application enforces a sequential flow:
+
+- Users must complete the personal information before proceeding to address
+- Address information must be completed before configuring loan parameters
+- Form data is preserved in localStorage api between steps
+
+## Development
+
+To run the application locally:
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### Development
-
-Start the development server with HMR:
-
-```bash
+# Start development server
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+The application will be available at `http://localhost:5173`.
