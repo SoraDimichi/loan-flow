@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,8 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router";
-import { useFormContext } from "~/forms/context/FormContext";
-import type { Route } from "./+types/home";
+import { useFormContext } from "~/components/form-context";
 
 const personalDataSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
@@ -30,16 +28,6 @@ const personalDataSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   gender: z.string().min(1, "Gender is required"),
 });
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Personal Information - Loan Application" },
-    {
-      name: "description",
-      content: "Enter your personal information for the loan application",
-    },
-  ];
-}
 
 export default function PersonalDataForm() {
   const navigate = useNavigate();
@@ -65,7 +53,7 @@ export default function PersonalDataForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[320px] h-[560px] flex flex-col rounded-md  space-y-2 max-w-3xl mx-auto p-4 border-1 border-white"
+        className="w-[320px] h-[560px] flex flex-col rounded-md  space-y-2 max-w-3xl mx-auto p-4 border-1 border-white"
       >
         <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
 
@@ -114,7 +102,6 @@ export default function PersonalDataForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="gender"
@@ -122,7 +109,7 @@ export default function PersonalDataForm() {
             <FormItem>
               <FormLabel>Gender</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="w-full">
                   <SelectTrigger>
                     <SelectValue placeholder="Select your gender" />
                   </SelectTrigger>

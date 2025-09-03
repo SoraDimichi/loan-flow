@@ -1,5 +1,4 @@
 interface Category {
-  id: number;
   name: string;
 }
 
@@ -18,27 +17,20 @@ export async function fetchWorkplaceCategories(): Promise<string[]> {
     }
   }
 
-  try {
-    const response = await fetch("https://dummyjson.com/products/categories");
+  const response = await fetch("https://dummyjson.com/products/categories");
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const categories = (await response.json()).map(
-      ({ name }: { name: string }) => name,
-    );
-
-    console.log(categories);
-
-    localStorage.setItem("workplaceCategories", JSON.stringify(categories));
-    localStorage.setItem("workplaceCategoriesTimestamp", Date.now().toString());
-
-    return categories;
-  } catch (error) {
-    console.error("Error fetching workplace categories:", error);
-    return [];
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
   }
+
+  const categories = ((await response.json()) as Category[]).map(
+    ({ name }: { name: string }) => name,
+  );
+
+  localStorage.setItem("workplaceCategories", JSON.stringify(categories));
+  localStorage.setItem("workplaceCategoriesTimestamp", Date.now().toString());
+
+  return categories;
 }
 
 export async function submitLoanApplication(formData: any) {

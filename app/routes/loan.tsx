@@ -14,9 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
-import { useFormContext } from "~/forms/context/FormContext";
-import { submitLoanApplication } from "~/forms/utils/api";
-import type { Route } from "./+types/home";
+import { useFormContext } from "~/components/form-context";
+import { submitLoanApplication } from "~/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -30,16 +29,10 @@ const loanFormSchema = z.object({
   term: z.number().min(10).max(30),
 });
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Loan Parameters - Loan Application" },
-    { name: "description", content: "Select your loan amount and term" },
-  ];
-}
-
 export default function LoanForm() {
   const navigate = useNavigate();
   const { formData, updateFormData, resetForm } = useFormContext();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [apiResponse, setApiResponse] = useState<any>(null);

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,38 +12,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFormContext } from "~/forms/context/FormContext";
-import { fetchWorkplaceCategories } from "~/forms/utils/api";
-import type { Route } from "./+types/home";
+import { Input } from "@/components/ui/input";
+import { useFormContext } from "~/components/form-context";
+import WorkplaceCategoriesSelect from "~/components/workplace-select-content";
 
 const addressFormSchema = z.object({
   workplace: z.string().min(1, "Workplace is required"),
   address: z.string().min(1, "Residential address is required"),
 });
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Address Information - Loan Application" },
-    {
-      name: "description",
-      content: "Enter your address and workplace information",
-    },
-  ];
-}
-
 export default function AddressForm() {
   const navigate = useNavigate();
   const { formData, updateFormData } = useFormContext();
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const form = useForm<z.infer<typeof addressFormSchema>>({
     resolver: zodResolver(addressFormSchema),
@@ -52,22 +38,6 @@ export default function AddressForm() {
       address: formData.address,
     },
   });
-
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchWorkplaceCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getCategories();
-  }, []);
 
   useEffect(() => {
     if (
@@ -106,24 +76,7 @@ export default function AddressForm() {
             <FormItem>
               <FormLabel>Workplace</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your workplace from the list" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {isLoading ? (
-                    <SelectItem value="loading" disabled>
-                      Loading categories...
-                    </SelectItem>
-                  ) : (
-                    categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
+                <WorkplaceCategoriesSelect />
               </Select>
               <FormMessage />
             </FormItem>
