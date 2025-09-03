@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,12 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "~/components/form-context";
 import WorkplaceCategoriesSelect from "~/components/workplace-select-content";
@@ -38,17 +32,6 @@ export default function AddressForm() {
       address: formData.address,
     },
   });
-
-  useEffect(() => {
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.phone ||
-      !formData.gender
-    ) {
-      navigate("/");
-    }
-  }, [formData, navigate]);
 
   function onSubmit(values: z.infer<typeof addressFormSchema>) {
     updateFormData(values);

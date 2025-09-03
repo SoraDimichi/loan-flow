@@ -34,25 +34,17 @@ export async function fetchWorkplaceCategories(): Promise<string[]> {
 }
 
 export async function submitLoanApplication(formData: any) {
-  try {
-    const response = await fetch("https://dummyjson.com/products/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: `${formData.firstName} ${formData.lastName}`,
-        description: `Loan application for ${formData.amount}$ for ${formData.term} days`,
-        price: formData.amount,
-        category: formData.workplace,
-      }),
-    });
+  const response = await fetch("https://dummyjson.com/products/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: `${formData.firstName} ${formData.lastName}`,
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error submitting loan application:", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
   }
+
+  return await response.json();
 }

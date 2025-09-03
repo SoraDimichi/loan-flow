@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,20 +35,6 @@ export default function LoanForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [apiResponse, setApiResponse] = useState<any>(null);
-
-  useEffect(() => {
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.phone ||
-      !formData.gender ||
-      !formData.workplace ||
-      !formData.address
-    ) {
-      navigate("/address");
-    }
-  }, [formData, navigate]);
 
   const form = useForm<z.infer<typeof loanFormSchema>>({
     resolver: zodResolver(loanFormSchema),
@@ -60,20 +46,16 @@ export default function LoanForm() {
 
   async function onSubmit(values: z.infer<typeof loanFormSchema>) {
     try {
-      setIsSubmitting(true);
-
       updateFormData(values);
-
       const completeFormData = {
         ...formData,
         ...values,
       };
 
-      const response = await submitLoanApplication(completeFormData);
-
-      setApiResponse(response);
+      await submitLoanApplication(completeFormData);
       setShowModal(true);
     } catch (error) {
+      form.setError("root.serverError", { message: "something went wrong" });
       console.error("Error submitting application:", error);
     } finally {
       setIsSubmitting(false);
@@ -87,13 +69,9 @@ export default function LoanForm() {
     navigate("/address");
   }
 
-  function handleCloseModal() {
-    setShowModal(false);
-  }
-
   function handleStartNew() {
-    resetForm();
     setShowModal(false);
+    resetForm();
     navigate("/");
   }
 
@@ -111,7 +89,7 @@ export default function LoanForm() {
             name="amount"
             render={({ field: { value, onChange } }) => (
               <FormItem>
-                <FormLabel>Loan amount - ${value || 200}</FormLabel>
+                <FormLabel>Loan amount - {value || 200}$</FormLabel>
                 <FormControl>
                   <Slider
                     min={200}
@@ -154,29 +132,40 @@ export default function LoanForm() {
             )}
           />
 
-          <div className="mt-auto flex justify-between">
-            <Button type="button" variant="outline" onClick={handleBack}>
-              Back
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Application"}
-            </Button>
+          <div className="flex flex-col mt-auto">
+            <FormMessage className="col-span-2 p-1 text-right">
+              {form.formState.errors.root?.serverError.message}
+            </FormMessage>
+            <div className="flex justify-between">
+              <Button
+                className="grid-row-start-2"
+                type="button"
+                variant="outline"
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Button
+                className="grid-row-start-2"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Application"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
-      <Dialog open={showModal} onOpenChange={handleCloseModal}>
+      <Dialog open={showModal} onOpenChange={handleStartNew}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Application Submitted Successfully!</DialogTitle>
             <DialogDescription>
-              Your loan application has been received and is being processed.
+              Congratulations, {formData.lastName} {formData.firstName}. You
+              have been approved for {formData.amount}$ for a period of
+              {formData.term} days.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
-            <pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-              <code>{JSON.stringify(apiResponse, null, 2)}</code>
-            </pre>
-          </div>
           <div className=" flex justify-end">
             <Button onClick={handleStartNew}>Start New Application</Button>
           </div>
